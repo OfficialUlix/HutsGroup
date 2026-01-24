@@ -34,7 +34,7 @@ This document tracks the evolution of the project.
 - **Changes:**
   - Positioned mobile menu button flush with the right screen edge.
   - Removed navigation container right padding on mobile.
-- Reason: [D-006] User request for edge-to-edge navigation toggle.
+- **Reason:** [D-006] User request for edge-to-edge navigation toggle.
 
 ## v1.0.4 (2026-01-24)
 - **Status:** Polished
@@ -43,3 +43,11 @@ This document tracks the evolution of the project.
   - Fixed flexbox layout issue causing menu button to float in the center.
 - **Reason:** [D-007] Fix "4cm offset" bug on mobile menu button.
 
+## v1.0.5 (2026-01-24)
+- **Status:** Optimized
+- **Changes:**
+  - Global CSS update for mobile alignment.
+  - Forced center alignment on all cards, panels, and footer columns.
+  - Reduced padding on glass panels to prevent crowding.
+  - Stacked Contact info and Footer grids vertically.
+- **Reason:** [D-008] Comprehensive mobile optimization ("grey boxes" fix).

@@ -710,3 +710,108 @@ footer {
         gap: 1.5rem;
     }
 }
+
+/* --- Mobile Optimization Overrides --- */
+
+@media (max-width: 968px) {
+    /* 1. Global Container & Text Alignment */
+    .container {
+        padding: 0 1.25rem; /* Slightly tighter padding */
+    }
+    
+    /* Force center alignment for major sections */
+    .hero-content, 
+    .glass-panel,
+    .tech-card,
+    .app-card,
+    .comparison-card,
+    .contact-wrapper,
+    .footer-grid,
+    .footer-col {
+        text-align: center;
+    }
+
+    /* 2. Flex & Grid Centering */
+    /* Ensure flex containers stack and center */
+    .contact-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .contact-wrapper > * {
+        width: 100%; /* Ensure full width for panels */
+    }
+
+    /* Fix "About" section icons alignment */
+    #about .glass-panel > div > div {
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    /* 3. Spacing Adjustments */
+    /* Reduce large internal padding on cards to prevent "cramped" look */
+    .glass-panel, 
+    .tech-card, 
+    .app-card, 
+    .faq-question {
+        padding: 1.5rem !important; /* Force override desktop styles */
+    }
+    
+    .section-padding {
+        padding: 4rem 1.25rem;
+    }
+
+    /* 4. Footer Alignment */
+    .footer-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2.5rem;
+    }
+    
+    .footer-brand p {
+        margin: 1rem auto; /* Center the paragraph */
+    }
+
+    /* 5. Contact Info Alignment */
+    .contact-info-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .contact-icon {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* 6. Form Adjustments */
+    .form-group label {
+        text-align: left; /* Keep labels readable */
+        padding-left: 0.25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    /* Ultra-small screen tweaks */
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+    
+    /* Stack hero buttons */
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
