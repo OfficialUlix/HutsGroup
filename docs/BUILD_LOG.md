@@ -28,3 +28,10 @@ This document tracks the evolution of the project.
   - Centered section titles and subtitles on mobile.
   - Refactored inline flex styles to `.section-header-row`.
 - **Reason:** [D-005] User feedback on mobile layout.
+
+## v1.0.3 (2026-01-24)
+- **Status:** Polished
+- **Changes:**
+  - Positioned mobile menu button flush with the right screen edge.
+  - Removed navigation container right padding on mobile.
+- **Reason:** [D-006] User request for edge-to-edge navigation toggle.

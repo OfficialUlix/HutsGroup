@@ -41,3 +41,10 @@ This document records the architectural and significant technical decisions for 
     3. Refactor inline styles in `index.html` to a dedicated `.section-header-row` class.
 - **Why:** To ensure a polished, professional appearance on smaller screens where default grid alignment creates visual imbalance.
 - **Trade-offs:** Slight refactor of inline styles to CSS classes (D-002 exception for responsiveness).
+
+## [D-006] Mobile Navigation Flush Alignment
+- **Date:** 2026-01-24
+- **Context:** Mobile menu toggle was offset from the right edge of the screen.
+- **Decision:** Reset `.mobile-menu-btn` padding/margin to zero and remove right padding from `.nav-container` on mobile devices.
+- **Why:** Per user request to have the menu button at the "very end on the right".
+- **Impact:** Button is now flush with the screen's right edge.
