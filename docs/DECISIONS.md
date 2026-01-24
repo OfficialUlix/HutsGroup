@@ -46,5 +46,12 @@ This document records the architectural and significant technical decisions for 
 - **Date:** 2026-01-24
 - **Context:** Mobile menu toggle was offset from the right edge of the screen.
 - **Decision:** Reset `.mobile-menu-btn` padding/margin to zero and remove right padding from `.nav-container` on mobile devices.
-- **Why:** Per user request to have the menu button at the "very end on the right".
-- **Impact:** Button is now flush with the screen's right edge.
+- Why: Per user request to have the menu button at the "very end on the right".
+- Impact: Button is now flush with the screen's right edge.
+
+## [D-007] Mobile Nav Flex Fix
+- **Date:** 2026-01-24
+- **Context:** Mobile menu button was centered (approx 4cm from edge) because the hidden `<nav>` element was still participating in the Flexbox `space-between` layout as a third item.
+- **Decision:** Apply `display: contents` to the `<nav>` element on mobile screens.
+- **Why:** Removes the `<nav>` wrapper from the layout box tree, causing the Flex container to see only the Logo and Button, pushing them to the true edges.
+- **Impact:** Button snaps correctly to the right edge.
