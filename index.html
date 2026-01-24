@@ -15,12 +15,12 @@
 
     <!-- Google Analytics (GA4) -->
     <!-- Replace G-XXXXXXXXXX with your actual Measurement ID -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PKSPVHR6RN"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
+      gtag('config', 'G-PKSPVHR6RN');
     </script>
 
     <!-- Favicon -->
@@ -183,14 +183,14 @@
                     </div>
                 </div>
                 <div class="app-card">
-                    <img src="https://placehold.co/600x400/1e293b/FFF?text=Automotive+Chassis" alt="Automotive Laser Cleaning">
+                    <img src="assets/img/B&A5.jpg" alt="Automotive Laser Cleaning">
                     <div class="app-overlay">
                         <h3>Automotive</h3>
                         <p>Rust removal, paint stripping, and parts restoration.</p>
                     </div>
                 </div>
                 <div class="app-card">
-                    <img src="https://placehold.co/600x400/1e293b/FFF?text=Residential+Gates" alt="Residential Cleaning">
+                    <img src="assets/img/B&A1.jpg" alt="Residential Cleaning">
                     <div class="app-overlay">
                         <h3>Residential</h3>
                         <p>Iron gates, fireplaces, garden features, and brickwork.</p>
@@ -367,7 +367,9 @@
                 </div>
 
                 <!-- Contact Form -->
-                <form class="glass-panel" style="padding: 2.5rem;" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                <form class="glass-panel" style="padding: 2.5rem;" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+                    <input type="hidden" name="form-name" value="contact">
+                    <p style="display:none"><label>Don’t fill this out if you’re human: <input name="bot-field"></label></p>
                     <h3 style="margin-bottom: 1.5rem;">Send an Enquiry</h3>
                     
                     <div class="form-group">
@@ -397,7 +399,7 @@
                         <textarea id="message" name="message" class="form-control" placeholder="Describe the item, surface type, and location..." required></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Send Request</button>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Get Your Quote</button>
                 </form>
 
             </div>
