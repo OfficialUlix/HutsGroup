@@ -564,6 +564,11 @@ footer {
         padding-right: 0;
     }
 
+    /* Fix for 3rd flex item causing button offset */
+    .nav-container nav {
+        display: contents;
+    }
+
     .hero h1 {
         font-size: 3rem;
     }
