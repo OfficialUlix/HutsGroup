@@ -51,3 +51,10 @@ This document tracks the evolution of the project.
   - Reduced padding on glass panels to prevent crowding.
   - Stacked Contact info and Footer grids vertically.
 - **Reason:** [D-008] Comprehensive mobile optimization ("grey boxes" fix).
+
+## v1.0.6 (2026-01-24)
+- **Status:** Polished
+- **Changes:**
+  - Increased global container width to 1300px.
+  - Widened FAQ and About section text boxes to 1000px.
+- **Reason:** [D-009] User request to widen text-heavy boxes.

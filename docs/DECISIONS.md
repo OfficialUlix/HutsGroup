@@ -62,3 +62,13 @@ This document records the architectural and significant technical decisions for 
 - **Decision:** Implement a dedicated "Mobile Optimization" block in CSS that forces center alignment for all major containers, stacks flex items vertically, centers footer columns, and reduces internal padding of cards/panels from 3rem to 1.5rem.
 - **Why:** To ensure a consistent, centered, and un-cluttered experience on small screens (iPhone 14 Pro, etc.).
 - **Impact:** Significant layout changes on screens < 968px.
+
+## [D-009] Content Container Widening
+- **Date:** 2026-01-24
+- **Context:** User requested widening text-heavy boxes (FAQ, About) by "approx 1cm".
+- **Decision:**
+    1. Increase `--container-width` from 1200px to 1300px.
+    2. Increase `.faq-container` max-width from 800px to 1000px.
+    3. Update inline `max-width` in "About" section from 800px to 1000px.
+- **Why:** Improves readability and utilizes available screen real estate on desktop/tablets.
+- **Impact:** Text spans more horizontally, reducing section height.

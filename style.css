@@ -12,7 +12,7 @@
 
     /* Spacing */
     --section-padding: 6rem 2rem;
-    --container-width: 1200px;
+    --container-width: 1300px;
 
     /* Transitions */
     --transition-fast: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -399,7 +399,7 @@ ul {
 /* --- FAQ --- */
 
 .faq-container {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
