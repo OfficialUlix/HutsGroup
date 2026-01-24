@@ -9,7 +9,7 @@ This document tracks the evolution of the project.
   - Audited existing codebase (HTML/CSS/JS).
   - Created `/docs` directory.
   - Added `README.md`, `ARCHITECTURE.md`, `GIT_GUIDE.md`, `DECISIONS.md`.
-- Reason: [D-001] Establish project foundation.
+- **Reason:** [D-001] Establish project foundation.
 
 ## v1.0.1 (2026-01-24)
 - **Status:** Production Ready
@@ -20,3 +20,11 @@ This document tracks the evolution of the project.
   - Improved CTA copy for better conversion ("Get Your Quote").
 - **Reason:** [D-003], [D-004] Prepare for deployment on Netlify.
 
+## v1.0.2 (2026-01-24)
+- **Status:** Polished
+- **Changes:**
+  - Fixed mobile alignment issues in Intro, Industries, and Contact sections.
+  - Updated grid column minimums from 300/350px to 280px for better mobile fit.
+  - Centered section titles and subtitles on mobile.
+  - Refactored inline flex styles to `.section-header-row`.
+- **Reason:** [D-005] User feedback on mobile layout.

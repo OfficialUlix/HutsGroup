@@ -31,3 +31,13 @@ This document records the architectural and significant technical decisions for 
 - **Decision:** Apply production GA ID (`G-PKSPVHR6RN`) and replace external `placehold.co` images with local assets from `assets/img`.
 - **Why:** Essential for launch readiness and privacy (avoiding external image tracking).
 - **Trade-offs:** Re-use of some assets until specific industry shots are provided.
+
+## [D-005] Mobile Alignment & Grid Layout
+- **Date:** 2026-01-24
+- **Context:** User reported offset alignment in "Intro", "Industries", and "Contact" sections on mobile.
+- **Decision:**
+    1. Update CSS Grid columns to `minmax(280px, 1fr)` and `justify-content: center`.
+    2. Force center alignment for Section Titles and Subtitles on mobile breakpoints.
+    3. Refactor inline styles in `index.html` to a dedicated `.section-header-row` class.
+- **Why:** To ensure a polished, professional appearance on smaller screens where default grid alignment creates visual imbalance.
+- **Trade-offs:** Slight refactor of inline styles to CSS classes (D-002 exception for responsiveness).
