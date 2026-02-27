@@ -1,45 +1,16 @@
-# Huts Group Laser Cleaning Website
+# React + Vite
 
-This is the official website for **Huts Group**, a premier laser cleaning service provider in the UK. The site is a responsive, single-page application (SPA) style landing page with a separate privacy policy.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Overview
+Currently, two official plugins are available:
 
-- **Purpose:** Promote laser cleaning services, showcase before/after results, and capture leads via contact form/WhatsApp.
-- **Target Audience:** Industrial, automotive, and heritage sectors in the UK.
-- **Design:** Dark mode, glassmorphism UI, mobile-responsive.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Tech Stack
+## React Compiler
 
-- **HTML5:** Semantic structure.
-- **CSS3:** Custom properties (variables), Flexbox, Grid, Glassmorphism effects.
-- **JavaScript (Vanilla):** Scroll animations, mobile navigation, FAQ accordion, cookie consent.
-- **External Libraries:**
-  - [FontAwesome](https://fontawesome.com) (Icons)
-  - [Google Fonts](https://fonts.google.com) (Inter)
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Getting Started
+## Expanding the ESLint configuration
 
-Since this is a static website, no build process or backend server is required for development.
-
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository-url>
-    ```
-2.  **Open locally:**
-    simply open `index.html` in your web browser.
-
-## Logic & Configuration
-
-- **Main Content:** `index.html`
-- **Styles:** `style.css` (Theming via `:root` variables)
-- **Interactions:** `script.js`
-- **Analytics:** Google Analytics (configured in `<head>` of `index.html`)
-- **Forms:** Formspree (configured in `<form action="...">` in `index.html`)
-
-## Documentation
-
-See the `docs/` folder for detailed documentation:
-- [Architecture](docs/ARCHITECTURE.md)
-- [Decision Log](docs/DECISIONS.md)
-- [Build Log](docs/BUILD_LOG.md)
-- [Git Guide](docs/GIT_GUIDE.md)
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
