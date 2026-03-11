@@ -58,3 +58,10 @@ This document tracks the evolution of the project.
   - Increased global container width to 1300px.
   - Widened FAQ and About section text boxes to 1000px.
 - **Reason:** [D-009] User request to widen text-heavy boxes.
+
+## v1.0.7 (2026-03-11)
+- **Status:** Asset Refresh
+- **Changes:**
+  - Updated multiple before/after gallery images in `assets/img`.
+  - Added `HUTSLOGOS/` source logo assets to the repository.
+- **Reason:** Save the latest approved media set and brand assets in version control.
