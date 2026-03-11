@@ -65,3 +65,11 @@ This document tracks the evolution of the project.
   - Updated multiple before/after gallery images in `assets/img`.
   - Added `HUTSLOGOS/` source logo assets to the repository.
 - **Reason:** Save the latest approved media set and brand assets in version control.
+
+## v1.0.8 (2026-03-11)
+- **Status:** Gallery Corrected
+- **Changes:**
+  - Rebuilt the Visible Results section with true same-subject before/after image pairs.
+  - Added dedicated cropped gallery assets in `assets/img/gallery`.
+  - Updated gallery copy and captions to describe the corrected examples accurately.
+- **Reason:** Replace mismatched generated photos with valid before/after examples in the live gallery.
