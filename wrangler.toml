@@ -1,0 +1,8 @@
+name = "hutsgroupsite"
+compatibility_date = "2026-03-12"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "CONTACTS_DB"
+database_name = "contacts"
+database_id = "e6b353c8-feb7-4b5c-b60c-6a56864fecbb"
