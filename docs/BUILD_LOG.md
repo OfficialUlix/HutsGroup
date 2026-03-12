@@ -89,3 +89,12 @@ This document tracks the evolution of the project.
   - Removed the obsolete `netlify.toml` file.
   - Left the repo aligned with Cloudflare Pages as the only active hosting target.
 - **Reason:** Prevent stale Netlify configuration from causing confusion during future deployments and maintenance.
+
+## v1.0.11 (2026-03-12)
+- **Status:** Pages API Hardening
+- **Changes:**
+  - Made `/api/contact` explicitly POST-only.
+  - Standardized the contact endpoint on JSON responses for both success and failure.
+  - Restricted submitted service values to the supported frontend options.
+  - Documented the exact Cloudflare Pages Git build settings for this repo.
+- **Reason:** Align the production form pipeline exactly with the Cloudflare Pages deployment model and API contract.

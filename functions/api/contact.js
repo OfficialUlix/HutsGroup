@@ -3,13 +3,23 @@ const MAX_EMAIL_LENGTH = 255;
 const MAX_SERVICE_LENGTH = 80;
 const MAX_MESSAGE_LENGTH = 4000;
 const MAX_URL_LENGTH = 500;
+const ALLOWED_SERVICES = new Set([
+    'General Enquiry',
+    'Rust Removal',
+    'Paint Stripping',
+    'Brick/Stone Cleaning',
+    'Automotive',
+    'Industrial Application'
+]);
 
 const json = (body, status = 200) =>
     new Response(JSON.stringify(body), {
         status,
         headers: {
             'content-type': 'application/json; charset=utf-8',
-            'cache-control': 'no-store'
+            'cache-control': 'no-store',
+            'allow': 'POST',
+            'x-content-type-options': 'nosniff'
         }
     });
 
@@ -33,26 +43,9 @@ const sanitizeMessage = (value) => {
 
 const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
-const wantsJson = (request) => {
-    const accept = request.headers.get('Accept') || '';
-    return accept.includes('application/json');
-};
-
-const respond = (request, body, status = 200, state = 'success') => {
-    if (wantsJson(request)) {
-        return json(body, status);
-    }
-
-    return redirectToContact(request, state);
-};
-
-const redirectToContact = (request, state) => {
-    const url = new URL(request.url);
-    url.pathname = '/';
-    url.search = '';
-    url.hash = 'contact';
-    url.searchParams.set('contact', state);
-    return Response.redirect(url.toString(), 303);
+const normalizeService = (value) => {
+    const service = sanitizeText(value, MAX_SERVICE_LENGTH);
+    return ALLOWED_SERVICES.has(service) ? service : 'General Enquiry';
 };
 
 const parseSubmission = async (request) => {
@@ -61,7 +54,7 @@ const parseSubmission = async (request) => {
     return {
         name: sanitizeText(formData.get('name'), MAX_NAME_LENGTH),
         email: sanitizeText(formData.get('email'), MAX_EMAIL_LENGTH).toLowerCase(),
-        service: sanitizeText(formData.get('service'), MAX_SERVICE_LENGTH) || 'General Enquiry',
+        service: normalizeService(formData.get('service')),
         message: sanitizeMessage(formData.get('message')),
         pageUrl: sanitizeText(formData.get('page_url'), MAX_URL_LENGTH),
         honeypot: sanitizeText(formData.get('company'), 120),
@@ -90,7 +83,17 @@ const verifyTurnstile = async (secret, token, ipAddress) => {
     return response.json();
 };
 
-export const onRequestPost = async ({ request, env }) => {
+export const onRequest = async ({ request, env }) => {
+    if (request.method !== 'POST') {
+        return json(
+            {
+                success: false,
+                message: 'Method not allowed.'
+            },
+            405
+        );
+    }
+
     try {
         const submission = await parseSubmission(request);
         const ipAddress =
@@ -101,33 +104,33 @@ export const onRequestPost = async ({ request, env }) => {
         const referer = sanitizeText(request.headers.get('referer'), MAX_URL_LENGTH);
 
         if (submission.honeypot) {
-            return respond(request, { success: true, message: 'Submission received.' }, 200, 'success');
+            return json({ success: true, message: 'Submission received.' });
         }
 
         if (!env.TURNSTILE_SECRET_KEY) {
-            return respond(request, { success: false, message: 'TURNSTILE_SECRET_KEY is missing.' }, 500, 'error');
+            return json({ success: false, message: 'TURNSTILE_SECRET_KEY is missing.' }, 500);
         }
 
         if (!env.CONTACTS_DB) {
-            return respond(request, { success: false, message: 'CONTACTS_DB binding is missing.' }, 500, 'error');
+            return json({ success: false, message: 'CONTACTS_DB binding is missing.' }, 500);
         }
 
         if (!submission.name || !submission.email || !submission.message) {
-            return respond(request, { success: false, message: 'Name, email, and message are required.' }, 400, 'error');
+            return json({ success: false, message: 'Name, email, and message are required.' }, 400);
         }
 
         if (!isValidEmail(submission.email)) {
-            return respond(request, { success: false, message: 'Please enter a valid email address.' }, 400, 'error');
+            return json({ success: false, message: 'Please enter a valid email address.' }, 400);
         }
 
         if (!submission.turnstileToken) {
-            return respond(request, { success: false, message: 'Please complete the verification challenge.' }, 400, 'error');
+            return json({ success: false, message: 'Please complete the verification challenge.' }, 400);
         }
 
         const turnstile = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, submission.turnstileToken, ipAddress);
 
         if (!turnstile.success) {
-            return respond(request, { success: false, message: 'Verification failed. Please try again.' }, 400, 'error');
+            return json({ success: false, message: 'Verification failed. Please try again.' }, 400);
         }
 
         const createdAt = new Date().toISOString();
@@ -161,24 +164,17 @@ export const onRequestPost = async ({ request, env }) => {
             )
             .run();
 
-        return respond(
-            request,
-            {
-                success: true,
-                message: 'Thanks. Your enquiry has been received and stored.'
-            },
-            200,
-            'success'
-        );
+        return json({
+            success: true,
+            message: 'Thanks. Your enquiry has been received and stored.'
+        });
     } catch (error) {
-        return respond(
-            request,
+        return json(
             {
                 success: false,
                 message: error.message || 'The form could not be submitted.'
             },
-            500,
-            'error'
+            500
         );
     }
 };

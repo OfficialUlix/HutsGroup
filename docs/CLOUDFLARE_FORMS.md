@@ -13,6 +13,17 @@ This project no longer uses Netlify for form handling. The contact form is now d
 
 The form will not work in production until these are configured in Cloudflare.
 
+## Recommended Cloudflare Pages Build Settings
+
+This repo is a plain static site at the project root with Pages Functions in the root `functions/` directory.
+
+- Framework preset: `None`
+- Build command: `exit 0`
+- Build output directory: `.`
+- Deploy command: `exit 0`
+
+Do not configure `wrangler deploy` or `wrangler pages deploy` as the deploy command inside Cloudflare Pages Git builds.
+
 ### 1. Create a Turnstile Widget
 
 1. In Cloudflare, go to `Turnstile`.
@@ -46,6 +57,8 @@ After the bindings are in place, redeploy the Pages project so the Functions can
 5. The browser submits the form to `/api/contact`.
 6. The Function validates the Turnstile token against Cloudflare.
 7. If valid, the Function inserts the lead into D1.
+
+`/api/contact` accepts `POST` only and returns JSON for both success and failure.
 
 ## Important Notes
 
