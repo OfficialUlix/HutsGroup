@@ -57,6 +57,11 @@ Date: 2026-03-12
 - Updated `docs/BUILD_LOG.md`
 - Added `docs/CLOUDFLARE_FORMS.md`
 
+### 8. Removed stale hosting config
+
+- Deleted the obsolete `netlify.toml`
+- Left Cloudflare Pages as the only active hosting path represented in the repo
+
 ## Why We Changed It
 
 - Netlify form attributes do nothing on Cloudflare Pages.

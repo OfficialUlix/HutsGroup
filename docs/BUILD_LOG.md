@@ -82,3 +82,10 @@ This document tracks the evolution of the project.
   - Added a D1 schema for persistent storage of contact submissions.
   - Updated project documentation to reflect Cloudflare Pages hosting and form handling.
 - **Reason:** The production site now runs on Cloudflare Pages, so form submissions need a Cloudflare-native backend instead of Netlify-specific attributes.
+
+## v1.0.10 (2026-03-12)
+- **Status:** Hosting Cleanup
+- **Changes:**
+  - Removed the obsolete `netlify.toml` file.
+  - Left the repo aligned with Cloudflare Pages as the only active hosting target.
+- **Reason:** Prevent stale Netlify configuration from causing confusion during future deployments and maintenance.
