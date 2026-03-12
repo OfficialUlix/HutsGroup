@@ -108,4 +108,170 @@ document.addEventListener('DOMContentLoaded', () => {
             cookieBanner.classList.remove('show');
         });
     }
+
+    // --- Cloudflare Contact Form ---
+    const contactForm = document.getElementById('contact-form');
+
+    if (contactForm) {
+        const statusBox = document.getElementById('contact-form-status');
+        const submitButton = document.getElementById('contact-submit');
+        const submitLabel = submitButton ? submitButton.querySelector('span') : null;
+        const turnstileShell = document.getElementById('turnstile-widget');
+        const pageUrlField = document.getElementById('page-url-field');
+
+        let turnstileWidgetId = null;
+        let turnstileSiteKey = null;
+
+        const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+        const setStatus = (type, message) => {
+            if (!statusBox) {
+                return;
+            }
+
+            statusBox.hidden = false;
+            statusBox.className = `form-status is-${type}`;
+            statusBox.textContent = message;
+        };
+
+        const clearStatus = () => {
+            if (!statusBox) {
+                return;
+            }
+
+            statusBox.hidden = true;
+            statusBox.className = 'form-status';
+            statusBox.textContent = '';
+        };
+
+        const setSubmitting = (isSubmitting) => {
+            if (!submitButton || !submitLabel) {
+                return;
+            }
+
+            submitButton.disabled = isSubmitting;
+            submitLabel.textContent = isSubmitting ? 'Sending...' : 'Get Your Quote';
+        };
+
+        const waitForTurnstile = async () => {
+            for (let attempt = 0; attempt < 50; attempt += 1) {
+                if (window.turnstile) {
+                    return window.turnstile;
+                }
+                await wait(100);
+            }
+
+            throw new Error('Secure verification failed to load.');
+        };
+
+        const syncPageUrl = () => {
+            if (pageUrlField) {
+                pageUrlField.value = window.location.href;
+            }
+        };
+
+        const readUrlState = () => {
+            const params = new URLSearchParams(window.location.search);
+            const formState = params.get('contact');
+
+            if (!formState) {
+                return;
+            }
+
+            if (formState === 'success') {
+                setStatus('success', 'Thanks. Your enquiry has been received and stored.');
+            } else if (formState === 'error') {
+                setStatus('error', 'The form could not be submitted. Please try again or use WhatsApp.');
+            }
+
+            params.delete('contact');
+            const nextQuery = params.toString();
+            const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ''}${window.location.hash}`;
+            window.history.replaceState({}, document.title, nextUrl);
+        };
+
+        const renderTurnstile = async () => {
+            const response = await fetch('/api/contact-config', {
+                headers: {
+                    Accept: 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Contact form configuration could not be loaded.');
+            }
+
+            const config = await response.json();
+            turnstileSiteKey = config.turnstileSiteKey;
+
+            if (!turnstileSiteKey) {
+                throw new Error('Turnstile site key is missing in Cloudflare Pages settings.');
+            }
+
+            const turnstile = await waitForTurnstile();
+            turnstileShell.classList.add('is-ready');
+            turnstileShell.innerHTML = '';
+            turnstileWidgetId = turnstile.render('#turnstile-widget', {
+                sitekey: turnstileSiteKey,
+                theme: 'dark'
+            });
+        };
+
+        syncPageUrl();
+        readUrlState();
+        setSubmitting(true);
+
+        renderTurnstile()
+            .then(() => {
+                clearStatus();
+                setSubmitting(false);
+            })
+            .catch((error) => {
+                setSubmitting(true);
+                setStatus('info', `${error.message} Please use WhatsApp or email until this is configured.`);
+            });
+
+        contactForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            clearStatus();
+            syncPageUrl();
+
+            const turnstileToken = contactForm.querySelector('[name="cf-turnstile-response"]');
+
+            if (!turnstileToken || !turnstileToken.value) {
+                setStatus('error', 'Please complete the verification before submitting.');
+                return;
+            }
+
+            setSubmitting(true);
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: new FormData(contactForm),
+                    headers: {
+                        Accept: 'application/json'
+                    }
+                });
+
+                const payload = await response.json().catch(() => ({}));
+
+                if (!response.ok) {
+                    throw new Error(payload.message || 'Submission failed.');
+                }
+
+                contactForm.reset();
+                syncPageUrl();
+                setStatus('success', payload.message || 'Thanks. Your enquiry has been received.');
+
+                if (window.turnstile && turnstileWidgetId !== null) {
+                    window.turnstile.reset(turnstileWidgetId);
+                }
+            } catch (error) {
+                setStatus('error', error.message || 'The form could not be submitted. Please try again.');
+            } finally {
+                setSubmitting(false);
+            }
+        });
+    }
 });

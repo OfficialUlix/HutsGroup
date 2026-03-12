@@ -553,6 +553,63 @@ textarea.form-control {
     min-height: 120px;
 }
 
+.form-helper {
+    margin-top: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.form-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.turnstile-shell {
+    min-height: 74px;
+    padding: 0.75rem;
+    border: 1px dashed var(--glass-border);
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.turnstile-shell.is-ready {
+    border-style: solid;
+}
+
+.form-status {
+    margin: 0 0 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.form-status.is-success {
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    background: rgba(34, 197, 94, 0.12);
+    color: #dcfce7;
+}
+
+.form-status.is-error {
+    border: 1px solid rgba(248, 113, 113, 0.35);
+    background: rgba(248, 113, 113, 0.12);
+    color: #fee2e2;
+}
+
+.form-status.is-info {
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    background: rgba(251, 191, 36, 0.12);
+    color: #fef3c7;
+}
+
+#contact-submit[disabled] {
+    opacity: 0.65;
+    cursor: wait;
+}
+
 /* --- Footer --- */
 
 footer {

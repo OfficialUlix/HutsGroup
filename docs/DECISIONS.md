@@ -72,3 +72,15 @@ This document records the architectural and significant technical decisions for 
     3. Update inline `max-width` in "About" section from 800px to 1000px.
 - **Why:** Improves readability and utilizes available screen real estate on desktop/tablets.
 - **Impact:** Text spans more horizontally, reducing section height.
+
+## [D-010] Cloudflare-Native Contact Form Handling
+- **Date:** 2026-03-12
+- **Context:** The project moved off Netlify and is now hosted on Cloudflare Pages, so Netlify form attributes no longer process submissions.
+- **Decision:**
+    1. Remove Netlify-specific form handling from the frontend.
+    2. Use Cloudflare Pages Functions to expose a public form config endpoint and a secure submission endpoint.
+    3. Validate all form submissions with Cloudflare Turnstile server-side.
+    4. Store validated leads in Cloudflare D1 instead of relying on inbox-only delivery.
+- **Why:** Cloudflare Pages does not provide Netlify-style built-in form capture. A Cloudflare-native stack keeps hosting, bot protection, and submission storage inside the same platform.
+- **Trade-offs:** Requires Cloudflare dashboard configuration for Turnstile and D1 bindings before production submissions will work.
+- **Impact:** Leads are preserved in D1 even if email notifications are added later or fail temporarily.

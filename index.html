@@ -36,6 +36,9 @@
     
     <!-- Font Awesome (for icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Cloudflare Turnstile -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
 <body>
 
@@ -419,9 +422,8 @@
                 </div>
 
                 <!-- Contact Form -->
-                <form class="glass-panel" style="padding: 2.5rem;" name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
-                    <input type="hidden" name="form-name" value="contact">
-                    <p style="display:none"><label>Don’t fill this out if you’re human: <input name="bot-field"></label></p>
+                <form id="contact-form" class="glass-panel" style="padding: 2.5rem;" name="contact" method="POST" action="/api/contact">
+                    <input type="hidden" name="page_url" id="page-url-field" value="">
                     <h3 style="margin-bottom: 1.5rem;">Send an Enquiry</h3>
                     
                     <div class="form-group">
@@ -451,7 +453,24 @@
                         <textarea id="message" name="message" class="form-control" placeholder="Describe the item, surface type, and location..." required></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Get Your Quote</button>
+                    <div class="form-group form-honeypot" aria-hidden="true">
+                        <label for="company">Company</label>
+                        <input type="text" id="company" name="company" class="form-control" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Spam Protection</label>
+                        <div id="turnstile-widget" class="turnstile-shell">
+                            <p class="form-helper">Loading secure verification...</p>
+                        </div>
+                        <p class="form-helper">This protects the form from bots and fake submissions.</p>
+                    </div>
+
+                    <p id="contact-form-status" class="form-status" role="status" aria-live="polite" hidden></p>
+
+                    <button id="contact-submit" type="submit" class="btn btn-primary" style="width: 100%;">
+                        <span>Get Your Quote</span>
+                    </button>
                 </form>
 
             </div>

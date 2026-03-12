@@ -1,7 +1,7 @@
 # System Architecture
 
 ## Overview
-The Huts Group website is a **static client-side application**. It relies on standard web technologies (HTML/CSS/JS) without a backend processor (like PHP or Node.js). Hosting is assumed to be a static file server (e.g., Netlify, Vercel, GitHub Pages, or standard Apache/Nginx).
+The Huts Group website is a **static client-side application with Cloudflare Pages Functions**. The marketing site remains standard HTML/CSS/JS, while the contact form is processed server-side by Cloudflare Pages Functions and stored in Cloudflare D1.
 
 ## Directory Structure
 
@@ -11,6 +11,10 @@ The Huts Group website is a **static client-side application**. It relies on sta
 ├── privacy.html        # Static privacy policy page
 ├── style.css           # Main stylesheet (contains all styles)
 ├── script.js           # Main logic (DOM manipulation, events)
+├── functions/          # Cloudflare Pages Functions
+│   └── api/            # Form config and submission endpoints
+├── cloudflare/         # Cloudflare-specific support files
+│   └── d1/             # SQL schema for form storage
 ├── assets/             # Static assets
 │   ├── img/            # Images (Before/After, Hero, etc.)
 │   └── favicon.svg     # Site icon
@@ -45,7 +49,8 @@ The JavaScript is lightweight and event-driven. It waits for `DOMContentLoaded`.
 
 ### 3. Third-Party Integrations
 - **Google Analytics:** Implemented via standard tracking snippet in `<head>`.
-- **Formspree:** Used for the contact form submission. The form `action` attribute points to the Formspree endpoint.
+- **Cloudflare Turnstile:** Protects the contact form from spam and bots.
+- **Cloudflare D1:** Stores validated contact submissions.
 - **WhatsApp:** Direct links using `wa.me` protocol.
 
 ## Data Flow
@@ -53,5 +58,8 @@ The JavaScript is lightweight and event-driven. It waits for `DOMContentLoaded`.
 2.  **Assets Load:** CSS, JS, Images, Fonts loaded from server/CDNs.
 3.  **Interaction:** User interacts with DOM elements (handled by `script.js`).
 4.  **Submission:**
-    - **Contact Form:** POST request -> Formspree -> Email Notification.
+    - **Contact Form:** Browser -> `/api/contact-config` to fetch the public Turnstile key.
+    - **Contact Form:** Browser -> `/api/contact` with form data and Turnstile token.
+    - **Verification:** Pages Function -> Cloudflare Turnstile Siteverify API.
+    - **Storage:** Pages Function -> D1 `contact_submissions` table.
     - **Analytics:** Data -> Google Analytics.

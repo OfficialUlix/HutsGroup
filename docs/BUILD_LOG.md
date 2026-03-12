@@ -73,3 +73,12 @@ This document tracks the evolution of the project.
   - Added dedicated cropped gallery assets in `assets/img/gallery`.
   - Updated gallery copy and captions to describe the corrected examples accurately.
 - **Reason:** Replace mismatched generated photos with valid before/after examples in the live gallery.
+
+## v1.0.9 (2026-03-12)
+- **Status:** Cloudflare Forms Migration
+- **Changes:**
+  - Replaced the dead Netlify form markup with a Cloudflare Pages form flow.
+  - Added Pages Functions for Turnstile-backed form configuration and submission handling.
+  - Added a D1 schema for persistent storage of contact submissions.
+  - Updated project documentation to reflect Cloudflare Pages hosting and form handling.
+- **Reason:** The production site now runs on Cloudflare Pages, so form submissions need a Cloudflare-native backend instead of Netlify-specific attributes.
