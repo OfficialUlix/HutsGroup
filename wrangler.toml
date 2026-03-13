@@ -3,7 +3,7 @@ compatibility_date = "2026-03-12"
 pages_build_output_dir = "."
 
 [vars]
-TURNSTILE_SITE_KEY = "0X4AAAAAACpsp0aB-mt8GgBM"
+TURNSTILE_SITE_KEY = "0x4AAAAAACpsp0aB-mt8GgBM"
 
 [[d1_databases]]
 binding = "CONTACTS_DB"
