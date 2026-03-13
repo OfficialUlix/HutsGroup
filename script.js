@@ -117,12 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const submitButton = document.getElementById('contact-submit');
         const submitLabel = submitButton ? submitButton.querySelector('span') : null;
         const turnstileShell = document.getElementById('turnstile-widget');
+        const turnstileContainer = document.getElementById('turnstile-container');
+        const turnstileLoading = contactForm.querySelector('[data-turnstile-loading]');
         const pageUrlField = document.getElementById('page-url-field');
 
         let turnstileWidgetId = null;
         let turnstileSiteKey = null;
-
-        const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
         const setStatus = (type, message) => {
             if (!statusBox) {
@@ -153,15 +153,56 @@ document.addEventListener('DOMContentLoaded', () => {
             submitLabel.textContent = isSubmitting ? 'Sending...' : 'Get Your Quote';
         };
 
-        const waitForTurnstile = async () => {
-            for (let attempt = 0; attempt < 50; attempt += 1) {
-                if (window.turnstile) {
-                    return window.turnstile;
-                }
-                await wait(100);
+        const setTurnstileLoading = (message) => {
+            if (!turnstileLoading) {
+                return;
             }
 
-            throw new Error('Secure verification failed to load.');
+            turnstileLoading.hidden = false;
+            turnstileLoading.textContent = message;
+        };
+
+        const hideTurnstileLoading = () => {
+            if (!turnstileLoading) {
+                return;
+            }
+
+            turnstileLoading.hidden = true;
+        };
+
+        const waitForTurnstile = async () => {
+            if (window.turnstile) {
+                return window.turnstile;
+            }
+
+            return new Promise((resolve, reject) => {
+                const timeoutId = window.setTimeout(() => {
+                    window.removeEventListener('turnstile:ready', handleReady);
+                    reject(new Error('Secure verification failed to load.'));
+                }, 10000);
+
+                const handleReady = () => {
+                    window.clearTimeout(timeoutId);
+                    resolve(window.turnstile);
+                };
+
+                window.addEventListener('turnstile:ready', handleReady, { once: true });
+            });
+        };
+
+        const loadContactConfig = async () => {
+            const response = await fetch('/api/contact-config', {
+                cache: 'no-store',
+                headers: {
+                    Accept: 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Contact form configuration could not be loaded.');
+            }
+
+            return response.json();
         };
 
         const syncPageUrl = () => {
@@ -191,29 +232,37 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const renderTurnstile = async () => {
-            const response = await fetch('/api/contact-config', {
-                headers: {
-                    Accept: 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Contact form configuration could not be loaded.');
+            if (!turnstileShell || !turnstileContainer) {
+                throw new Error('Turnstile container is missing from the contact form.');
             }
 
-            const config = await response.json();
+            const [config, turnstile] = await Promise.all([
+                loadContactConfig(),
+                waitForTurnstile()
+            ]);
+
             turnstileSiteKey = config.turnstileSiteKey;
 
             if (!turnstileSiteKey) {
                 throw new Error('Turnstile site key is missing in Cloudflare Pages settings.');
             }
 
-            const turnstile = await waitForTurnstile();
             turnstileShell.classList.add('is-ready');
-            turnstileShell.innerHTML = '';
-            turnstileWidgetId = turnstile.render('#turnstile-widget', {
+            setTurnstileLoading('Loading secure verification...');
+
+            turnstileWidgetId = turnstile.render(turnstileContainer, {
                 sitekey: turnstileSiteKey,
-                theme: 'dark'
+                theme: 'dark',
+                callback: () => {
+                    hideTurnstileLoading();
+                },
+                'error-callback': () => {
+                    setTurnstileLoading('Secure verification failed to load.');
+                    setStatus('error', 'Secure verification failed to render. Please refresh the page and try again.');
+                },
+                'expired-callback': () => {
+                    setStatus('info', 'Verification expired. Please complete it again before submitting.');
+                }
             });
         };
 
@@ -224,9 +273,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTurnstile()
             .then(() => {
                 clearStatus();
+                hideTurnstileLoading();
                 setSubmitting(false);
             })
             .catch((error) => {
+                setTurnstileLoading('Secure verification unavailable.');
                 setSubmitting(true);
                 setStatus('info', `${error.message} Please use WhatsApp or email until this is configured.`);
             });

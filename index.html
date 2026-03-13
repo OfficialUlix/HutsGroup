@@ -37,8 +37,6 @@
     <!-- Font Awesome (for icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Cloudflare Turnstile -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 </head>
 <body>
 
@@ -461,7 +459,8 @@
                     <div class="form-group">
                         <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Spam Protection</label>
                         <div id="turnstile-widget" class="turnstile-shell">
-                            <p class="form-helper">Loading secure verification...</p>
+                            <div id="turnstile-container"></div>
+                            <p class="form-helper" data-turnstile-loading>Loading secure verification...</p>
                         </div>
                         <p class="form-helper">This protects the form from bots and fake submissions.</p>
                     </div>
@@ -536,7 +535,15 @@
         </div>
     </div>
 
+    <!-- Cloudflare Turnstile -->
+    <script>
+        window.onTurnstileLoad = () => {
+            window.dispatchEvent(new Event('turnstile:ready'));
+        };
+    </script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
+
     <!-- Scripts -->
-    <script src="script.js"></script>
+    <script src="/script.js?v=20260313"></script>
 </body>
 </html>
