@@ -3,6 +3,8 @@ const MAX_EMAIL_LENGTH = 255;
 const MAX_SERVICE_LENGTH = 80;
 const MAX_MESSAGE_LENGTH = 4000;
 const MAX_URL_LENGTH = 500;
+// Temporary debug instrumentation for Turnstile verification. Remove after issue is resolved.
+const TURNSTILE_DEBUG_MODE = true;
 const ALLOWED_SERVICES = new Set([
     'General Enquiry',
     'Rust Removal',
@@ -76,11 +78,43 @@ const verifyTurnstile = async (secret, token, ipAddress) => {
         body: payload
     });
 
-    if (!response.ok) {
-        throw new Error('Turnstile verification request failed.');
+    let verifyJson;
+
+    try {
+        verifyJson = await response.json();
+    } catch (error) {
+        verifyJson = {
+            success: false,
+            parse_error: error.message || 'Turnstile verification response could not be parsed as JSON.'
+        };
     }
 
-    return response.json();
+    if (TURNSTILE_DEBUG_MODE) {
+        console.log('Has TURNSTILE_SECRET_KEY:', Boolean(secret));
+        console.log(
+            'Turnstile verify result:',
+            JSON.stringify({
+                httpStatus: response.status,
+                httpOk: response.ok,
+                verifyJson
+            })
+        );
+    }
+
+    if (!response.ok) {
+        return {
+            success: false,
+            httpStatus: response.status,
+            httpOk: response.ok,
+            verifyJson
+        };
+    }
+
+    return {
+        ...verifyJson,
+        httpStatus: response.status,
+        httpOk: response.ok
+    };
 };
 
 export const onRequest = async ({ request, env }) => {
@@ -130,7 +164,14 @@ export const onRequest = async ({ request, env }) => {
         const turnstile = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, submission.turnstileToken, ipAddress);
 
         if (!turnstile.success) {
-            return json({ success: false, message: 'Verification failed. Please try again.' }, 400);
+            return json(
+                {
+                    success: false,
+                    message: 'Verification failed. Please try again.',
+                    turnstile: TURNSTILE_DEBUG_MODE ? turnstile : undefined
+                },
+                400
+            );
         }
 
         const createdAt = new Date().toISOString();
